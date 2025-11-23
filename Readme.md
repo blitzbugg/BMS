@@ -1,4 +1,3 @@
-```md
 # Bank Management System (C Project)
 
 ## MCA 2024–2026  
@@ -136,8 +135,4 @@ Malavika Subhash
 Pranav M P
 Rojin V Saji
 Smera thankam Rojan
-
-
-
-```
 
