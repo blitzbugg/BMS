@@ -14,5 +14,6 @@ void insertLoan();
 void editLoan();
 void deleteLoan();
 void viewLoans();
+Loan *findLoan(int loanId);
 
 #endif
