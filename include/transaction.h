@@ -3,9 +3,9 @@
 
 typedef struct {
     int t_id;
-    char a_no[20];
-    char t_date[10];
-    int t_type;
+    int a_no;
+    char t_date[11];
+    int t_type; // 1=Credit, 2=Debit
     int t_amt;
 } Transaction;
 
@@ -13,5 +13,6 @@ void insertTransaction();
 void editTransaction();
 void deleteTransaction();
 void viewTransactions();
+Transaction *findTransaction(int transId);
 
 #endif

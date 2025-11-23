@@ -2,22 +2,56 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/account.h"
+#include "../include/utility.h"
 
 #define FILENAME "data/account.dat"
+
+Account *findAccount(int accountNo) {
+    FILE *fp;
+    Account *acc = (Account *)malloc(sizeof(Account));
+    Account temp;
+    
+    if (acc == NULL) {
+        return NULL;
+    }
+    
+    fp = fopen(FILENAME, "rb");
+    if (fp == NULL) {
+        free(acc);
+        return NULL;
+    }
+    
+    while (fread(&temp, sizeof(Account), 1, fp) == 1) {
+        if (temp.a_no == accountNo) {
+            *acc = temp;
+            fclose(fp);
+            return acc;
+        }
+    }
+    
+    fclose(fp);
+    free(acc);
+    return NULL;
+}
 
 void insertAccount() {
     Account acc;
     FILE *fp;
     
-    printf("\n=== INSERT ACCOUNT ===\n");
-    printf("Enter Account Number: ");
-    scanf("%d", &acc.a_no);
+    printHeader("INSERT ACCOUNT");
+    
+    // Auto-generate account number
+    acc.a_no = getNextId(FILENAME, sizeof(Account), 0);
+    printf("Auto-generated Account Number: %d\n", acc.a_no);
     
     printf("Enter Account Name: ");
-    scanf("%s", acc.a_name);
+    clearInputBuffer();
+    fgets(acc.a_name, sizeof(acc.a_name), stdin);
+    removeNewline(acc.a_name);
     
     printf("Enter Address: ");
-    scanf("%s", acc.a_addr);
+    fgets(acc.a_addr, sizeof(acc.a_addr), stdin);
+    removeNewline(acc.a_addr);
     
     printf("Enter Balance: ");
     scanf("%d", &acc.a_bal);
@@ -31,7 +65,8 @@ void insertAccount() {
     fwrite(&acc, sizeof(Account), 1, fp);
     fclose(fp);
     
-    printf("Account inserted successfully!\n");
+    printf("\nAccount inserted successfully!\n");
+    pause();
 }
 
 void editAccount() {
@@ -40,13 +75,14 @@ void editAccount() {
     int accNo, found = 0;
     long int pos;
     
-    printf("\n=== EDIT ACCOUNT ===\n");
+    printHeader("EDIT ACCOUNT");
     printf("Enter Account Number to edit: ");
     scanf("%d", &accNo);
     
     fp = fopen(FILENAME, "rb+");
     if (fp == NULL) {
         printf("Error opening file!\n");
+        pause();
         return;
     }
     
@@ -56,26 +92,36 @@ void editAccount() {
             pos = ftell(fp) - sizeof(Account);
             fseek(fp, pos, SEEK_SET);
             
-            printf("Enter new Account Name: ");
-            scanf("%s", acc.a_name);
+            printf("\nCurrent Account Details:\n");
+            printf("Name: %s\n", acc.a_name);
+            printf("Address: %s\n", acc.a_addr);
+            printf("Balance: %d\n", acc.a_bal);
+            
+            printf("\nEnter new Account Name: ");
+            clearInputBuffer();
+            fgets(acc.a_name, sizeof(acc.a_name), stdin);
+            removeNewline(acc.a_name);
             
             printf("Enter new Address: ");
-            scanf("%s", acc.a_addr);
+            fgets(acc.a_addr, sizeof(acc.a_addr), stdin);
+            removeNewline(acc.a_addr);
             
             printf("Enter new Balance: ");
             scanf("%d", &acc.a_bal);
             
             fwrite(&acc, sizeof(Account), 1, fp);
-            printf("Account updated successfully!\n");
+            printf("\nAccount updated successfully!\n");
             break;
         }
     }
+    
+    fclose(fp);
     
     if (!found) {
         printf("Account not found!\n");
     }
     
-    fclose(fp);
+    pause();
 }
 
 void deleteAccount() {
@@ -83,13 +129,14 @@ void deleteAccount() {
     FILE *fp, *temp;
     int accNo, found = 0;
     
-    printf("\n=== DELETE ACCOUNT ===\n");
+    printHeader("DELETE ACCOUNT");
     printf("Enter Account Number to delete: ");
     scanf("%d", &accNo);
     
     fp = fopen(FILENAME, "rb");
     if (fp == NULL) {
         printf("Error opening file!\n");
+        pause();
         return;
     }
     
@@ -97,6 +144,7 @@ void deleteAccount() {
     if (temp == NULL) {
         printf("Error creating temporary file!\n");
         fclose(fp);
+        pause();
         return;
     }
     
@@ -114,31 +162,44 @@ void deleteAccount() {
     if (found) {
         remove(FILENAME);
         rename("data/temp.dat", FILENAME);
-        printf("Account deleted successfully!\n");
+        printf("\nAccount deleted successfully!\n");
     } else {
         remove("data/temp.dat");
         printf("Account not found!\n");
     }
+    
+    pause();
 }
 
 void viewAccounts() {
     Account acc;
     FILE *fp;
+    int count = 0;
     
-    printf("\n=== VIEW ALL ACCOUNTS ===\n");
-    printf("%-15s %-20s %-40s %-15s\n", "Account No", "Name", "Address", "Balance");
-    printf("--------------------------------------------------------------------------------\n");
+    printHeader("VIEW ALL ACCOUNTS");
     
     fp = fopen(FILENAME, "rb");
     if (fp == NULL) {
-        printf("Error opening file or file is empty!\n");
+        printf("No accounts found. File is empty or doesn't exist.\n");
+        pause();
         return;
     }
     
+    printf("%-15s %-20s %-40s %-15s\n", "Account No", "Name", "Address", "Balance");
+    printf("--------------------------------------------------------------------------------\n");
+    
     while (fread(&acc, sizeof(Account), 1, fp) == 1) {
         printf("%-15d %-20s %-40s %-15d\n", acc.a_no, acc.a_name, acc.a_addr, acc.a_bal);
+        count++;
     }
     
     fclose(fp);
+    
+    if (count == 0) {
+        printf("No records found.\n");
+    } else {
+        printf("\nTotal records: %d\n", count);
+    }
+    
+    pause();
 }
-

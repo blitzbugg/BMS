@@ -12,5 +12,6 @@ void insertAccount();
 void editAccount();
 void deleteAccount();
 void viewAccounts();
+Account *findAccount(int accountNo);
 
 #endif
