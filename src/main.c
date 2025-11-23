@@ -3,17 +3,18 @@
 #include "../include/account.h"
 #include "../include/transaction.h"
 #include "../include/loan.h"
+#include "../include/utility.h"
 
 void accountMenu() {
     int choice;
     do {
-        printf("\n=== ACCOUNT MASTER FILE ===\n");
+        printHeader("ACCOUNT MASTER FILE");
         printf("1. Insert Record\n");
         printf("2. Edit Record\n");
         printf("3. Delete Record\n");
         printf("4. View Records\n");
         printf("5. Back to Main Menu\n");
-        printf("Enter your choice: ");
+        printf("\nEnter your choice: ");
         scanf("%d", &choice);
         
         switch(choice) {
@@ -32,7 +33,8 @@ void accountMenu() {
             case 5:
                 return;
             default:
-                printf("Invalid choice! Please try again.\n");
+                printf("\nInvalid choice! Please try again.\n");
+                pause();
         }
     } while(choice != 5);
 }
@@ -40,13 +42,13 @@ void accountMenu() {
 void transactionMenu() {
     int choice;
     do {
-        printf("\n=== TRANSACTION FILE ===\n");
+        printHeader("TRANSACTION FILE");
         printf("1. Insert Record\n");
         printf("2. Edit Record\n");
         printf("3. Delete Record\n");
         printf("4. View Records\n");
         printf("5. Back to Main Menu\n");
-        printf("Enter your choice: ");
+        printf("\nEnter your choice: ");
         scanf("%d", &choice);
         
         switch(choice) {
@@ -65,7 +67,8 @@ void transactionMenu() {
             case 5:
                 return;
             default:
-                printf("Invalid choice! Please try again.\n");
+                printf("\nInvalid choice! Please try again.\n");
+                pause();
         }
     } while(choice != 5);
 }
@@ -73,13 +76,13 @@ void transactionMenu() {
 void loanMenu() {
     int choice;
     do {
-        printf("\n=== LOAN FILE ===\n");
+        printHeader("LOAN FILE");
         printf("1. Insert Record\n");
         printf("2. Edit Record\n");
         printf("3. Delete Record\n");
         printf("4. View Records\n");
         printf("5. Back to Main Menu\n");
-        printf("Enter your choice: ");
+        printf("\nEnter your choice: ");
         scanf("%d", &choice);
         
         switch(choice) {
@@ -98,7 +101,8 @@ void loanMenu() {
             case 5:
                 return;
             default:
-                printf("Invalid choice! Please try again.\n");
+                printf("\nInvalid choice! Please try again.\n");
+                pause();
         }
     } while(choice != 5);
 }
@@ -106,17 +110,18 @@ void loanMenu() {
 int main() {
     int choice;
     
+    printf("\n");
     printf("========================================\n");
     printf("   BANK MANAGEMENT SYSTEM\n");
     printf("========================================\n");
     
     do {
-        printf("\n=== MAIN MENU ===\n");
+        printHeader("MAIN MENU");
         printf("1. Account Master File\n");
         printf("2. Transaction File\n");
         printf("3. Loan File\n");
         printf("4. Exit\n");
-        printf("Enter your choice: ");
+        printf("\nEnter your choice: ");
         scanf("%d", &choice);
         
         switch(choice) {
@@ -130,13 +135,13 @@ int main() {
                 loanMenu();
                 break;
             case 4:
-                printf("Thank you for using Bank Management System!\n");
+                printf("\nThank you for using Bank Management System!\n");
                 exit(0);
             default:
-                printf("Invalid choice! Please try again.\n");
+                printf("\nInvalid choice! Please try again.\n");
+                pause();
         }
     } while(choice != 4);
     
     return 0;
 }
-
