@@ -14,5 +14,7 @@ void editTransaction();
 void deleteTransaction();
 void viewTransactions();
 Transaction *findTransaction(int transId);
+int updateAccountBalance(int accountNo, int amount, int transactionType);
+int revertAccountBalance(int accountNo, int amount, int transactionType);
 
 #endif
