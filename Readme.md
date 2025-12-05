@@ -123,16 +123,16 @@ The program will automatically create `.dat` files inside the **data/** folder i
 ## 👤 Contributors
 **Group Members – MCA 2025–2027 Batch**
 
-1. Ananthapadmanabhan M
-2. Abel Varghese John
-3. Akhil S Kumar
-4. Aparna Mohan
-5. Aswin Baiju
-6. Gadha Sathyan
-7. Janisha J
-8. Josson Jose Joseph
-9. Malavika Subhash
-10. Pranav M P
-11. Rojin V Saji
-12. Smera thankam Rojan
+    1. Ananthapadmanabhan M
+    2. Abel Varghese John
+    3. Akhil S Kumar
+    4. Aparna Mohan
+    5. Aswin Baiju
+    6. Gadha Sathyan
+    7. Janisha J
+    8. Josson Jose Joseph
+    9. Malavika Subhash
+    10. Pranav M P
+    11. Rojin V Saji
+    12. Smera thankam Rojan
 
