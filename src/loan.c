@@ -39,20 +39,29 @@ void insertLoan() {
     FILE *fp;
     int accNo;
     
-    printHeader("INSERT LOAN");
+    clearScreen();
+    setLoanMenuColor();
+    printDoubleBorderBox("INSERT LOAN", COLOR_BRIGHT_WHITE, BG_MAGENTA, 55);
+    resetColor();
     
     // Auto-generate loan ID
     loan.l_id = getNextId(FILENAME, sizeof(Loan), 0);
-    printf("Auto-generated Loan ID: %d\n", loan.l_id);
+    setInfoColor();
+    printf("Auto-generated Loan ID: ");
+    setColor(COLOR_BRIGHT_YELLOW, COLOR_BLACK << 4);
+    printf("%d\n", loan.l_id);
+    resetColor();
     
     printf("Enter Account Number: ");
     scanf("%d", &accNo);
-    clearInputBuffer(); // Clear buffer after scanf
+    // clearInputBuffer(); // Clear buffer after scanf
     
     // Cross-validation: Check if account exists
     if (!accountExists(accNo)) {
+        setErrorColor();
         printf("Error: Account Number %d does not exist!\n", accNo);
         printf("Please create the account first.\n");
+        resetColor();
         pause();
         return;
     }
@@ -70,9 +79,10 @@ void insertLoan() {
     removeNewline(loan.l_date);
     
     // Read loan type with validation
+    // clearInputBuffer();
     do {
         printf("Enter Loan Type: ");
-        fflush(stdout);
+        scanf("%d", &loan.l_type);
         if (fgets(loan.l_type, sizeof(loan.l_type), stdin) == NULL) {
             printf("Error reading input!\n");
             pause();
@@ -95,7 +105,9 @@ void insertLoan() {
     
     fp = fopen(FILENAME, "ab");
     if (fp == NULL) {
-        printf("Error opening file!\n");
+        setErrorColor();
+        printf("\nError opening file!\n");
+        resetColor();
         pause();
         return;
     }
@@ -103,7 +115,9 @@ void insertLoan() {
     fwrite(&loan, sizeof(Loan), 1, fp);
     fclose(fp);
     
+    setSuccessColor();
     printf("\nLoan inserted successfully!\n");
+    resetColor();
     pause();
 }
 
@@ -113,13 +127,19 @@ void editLoan() {
     int loanId, accNo, found = 0;
     long int pos;
     
-    printHeader("EDIT LOAN");
+    clearScreen();
+    setLoanMenuColor();
+    printDoubleBorderBox("EDIT LOAN", COLOR_BRIGHT_WHITE, BG_MAGENTA, 55);
+    resetColor();
+    
     printf("Enter Loan ID to edit: ");
     scanf("%d", &loanId);
     
     fp = fopen(FILENAME, "rb+");
     if (fp == NULL) {
-        printf("Error opening file!\n");
+        setErrorColor();
+        printf("\nError opening file!\n");
+        resetColor();
         pause();
         return;
     }
@@ -130,7 +150,9 @@ void editLoan() {
             pos = ftell(fp) - sizeof(Loan);
             fseek(fp, pos, SEEK_SET);
             
+            setInfoColor();
             printf("\nCurrent Loan Details:\n");
+            resetColor();
             printf("Account Number: %d\n", loan.a_no);
             printf("Date: %s\n", loan.l_date);
             printf("Type: %s\n", loan.l_type);
@@ -142,8 +164,10 @@ void editLoan() {
             
             // Cross-validation: Check if account exists
             if (!accountExists(accNo)) {
+                setErrorColor();
                 printf("Error: Account Number %d does not exist!\n", accNo);
                 printf("Please create the account first.\n");
+                resetColor();
                 fclose(fp);
                 pause();
                 return;
@@ -187,7 +211,9 @@ void editLoan() {
             scanf("%d", &loan.l_dur);
             
             fwrite(&loan, sizeof(Loan), 1, fp);
+            setSuccessColor();
             printf("\nLoan updated successfully!\n");
+            resetColor();
             break;
         }
     }
@@ -195,7 +221,9 @@ void editLoan() {
     fclose(fp);
     
     if (!found) {
-        printf("Loan not found!\n");
+        setErrorColor();
+        printf("\nLoan not found!\n");
+        resetColor();
     }
     
     pause();
@@ -206,20 +234,28 @@ void deleteLoan() {
     FILE *fp, *temp;
     int loanId, found = 0;
     
-    printHeader("DELETE LOAN");
+    clearScreen();
+    setLoanMenuColor();
+    printDoubleBorderBox("DELETE LOAN", COLOR_BRIGHT_WHITE, BG_MAGENTA, 55);
+    resetColor();
+    
     printf("Enter Loan ID to delete: ");
     scanf("%d", &loanId);
     
     fp = fopen(FILENAME, "rb");
     if (fp == NULL) {
-        printf("Error opening file!\n");
+        setErrorColor();
+        printf("\nError opening file!\n");
+        resetColor();
         pause();
         return;
     }
     
     temp = fopen("data/temp.dat", "wb");
     if (temp == NULL) {
-        printf("Error creating temporary file!\n");
+        setErrorColor();
+        printf("\nError creating temporary file!\n");
+        resetColor();
         fclose(fp);
         pause();
         return;
@@ -229,6 +265,8 @@ void deleteLoan() {
         if (loan.l_id != loanId) {
             fwrite(&loan, sizeof(Loan), 1, temp);
         } else {
+
+             
             found = 1;
         }
     }
@@ -239,10 +277,14 @@ void deleteLoan() {
     if (found) {
         remove(FILENAME);
         rename("data/temp.dat", FILENAME);
+        setSuccessColor();
         printf("\nLoan deleted successfully!\n");
+        resetColor();
     } else {
         remove("data/temp.dat");
-        printf("Loan not found!\n");
+        setErrorColor();
+        printf("\nLoan not found!\n");
+        resetColor();
     }
     
     pause();
@@ -253,17 +295,24 @@ void viewLoans() {
     FILE *fp;
     int count = 0;
     
-    printHeader("VIEW ALL LOANS");
+    clearScreen();
+    setLoanMenuColor();
+    printDoubleBorderBox("VIEW ALL LOANS", COLOR_BRIGHT_WHITE, BG_MAGENTA, 75);
+    resetColor();
     
     fp = fopen(FILENAME, "rb");
     if (fp == NULL) {
+        setInfoColor();
         printf("No loans found. File is empty or doesn't exist.\n");
+        resetColor();
         pause();
         return;
     }
     
+    setColor(COLOR_BRIGHT_YELLOW, COLOR_BLACK << 4);
     printf("%-10s %-15s %-15s %-20s %-15s %-10s\n", "Loan ID", "Account No", "Date", "Loan Type", "Amount", "Duration");
-    printf("--------------------------------------------------------------------------------\n");
+    resetColor();
+    drawHorizontalLine('-', 85);
     
     while (fread(&loan, sizeof(Loan), 1, fp) == 1) {
         printf("%-10d %-15d %-15s %-20s %-15d %-10d\n", loan.l_id, loan.a_no, loan.l_date, loan.l_type, loan.l_amt, loan.l_dur);
@@ -273,9 +322,13 @@ void viewLoans() {
     fclose(fp);
     
     if (count == 0) {
+        setInfoColor();
         printf("No records found.\n");
+        resetColor();
     } else {
+        setInfoColor();
         printf("\nTotal records: %d\n", count);
+        resetColor();
     }
     
     pause();

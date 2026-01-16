@@ -38,14 +38,21 @@ void insertAccount() {
     Account acc;
     FILE *fp;
     
-    printHeader("INSERT ACCOUNT");
+    clearScreen();
+    setAccountMenuColor();
+    printDoubleBorderBox("INSERT ACCOUNT", COLOR_BRIGHT_WHITE, BG_GREEN, 60);
+    resetColor();
     
     // Auto-generate account number
     acc.a_no = getNextId(FILENAME, sizeof(Account), 0);
-    printf("Auto-generated Account Number: %d\n", acc.a_no);
+    setInfoColor();
+    printf("Auto-generated Account Number: ");
+    setColor(COLOR_BRIGHT_YELLOW, COLOR_BLACK << 4);
+    printf("%d\n", acc.a_no);
+    resetColor();
     
-    printf("Enter Account Name: ");
-    clearInputBuffer();
+    printf("\nEnter Account Name: ");
+    // clearInputBuffer();
     fgets(acc.a_name, sizeof(acc.a_name), stdin);
     removeNewline(acc.a_name);
     
@@ -58,14 +65,19 @@ void insertAccount() {
     
     fp = fopen(FILENAME, "ab");
     if (fp == NULL) {
-        printf("Error opening file!\n");
+        setErrorColor();
+        printf("\nError opening file!\n");
+        resetColor();
+        pause();
         return;
     }
     
     fwrite(&acc, sizeof(Account), 1, fp);
     fclose(fp);
     
+    setSuccessColor();
     printf("\nAccount inserted successfully!\n");
+    resetColor();
     pause();
 }
 
@@ -75,13 +87,19 @@ void editAccount() {
     int accNo, found = 0;
     long int pos;
     
-    printHeader("EDIT ACCOUNT");
+    clearScreen();
+    setAccountMenuColor();
+    printDoubleBorderBox("EDIT ACCOUNT", COLOR_BRIGHT_WHITE, BG_GREEN, 60);
+    resetColor();
+    
     printf("Enter Account Number to edit: ");
     scanf("%d", &accNo);
     
     fp = fopen(FILENAME, "rb+");
     if (fp == NULL) {
-        printf("Error opening file!\n");
+        setErrorColor();
+        printf("\nError opening file!\n");
+        resetColor();
         pause();
         return;
     }
@@ -92,7 +110,9 @@ void editAccount() {
             pos = ftell(fp) - sizeof(Account);
             fseek(fp, pos, SEEK_SET);
             
+            setInfoColor();
             printf("\nCurrent Account Details:\n");
+            resetColor();
             printf("Name: %s\n", acc.a_name);
             printf("Address: %s\n", acc.a_addr);
             printf("Balance: %d\n", acc.a_bal);
@@ -110,7 +130,9 @@ void editAccount() {
             scanf("%d", &acc.a_bal);
             
             fwrite(&acc, sizeof(Account), 1, fp);
+            setSuccessColor();
             printf("\nAccount updated successfully!\n");
+            resetColor();
             break;
         }
     }
@@ -118,7 +140,9 @@ void editAccount() {
     fclose(fp);
     
     if (!found) {
-        printf("Account not found!\n");
+        setErrorColor();
+        printf("\nAccount not found!\n");
+        resetColor();
     }
     
     pause();
@@ -129,20 +153,28 @@ void deleteAccount() {
     FILE *fp, *temp;
     int accNo, found = 0;
     
-    printHeader("DELETE ACCOUNT");
+    clearScreen();
+    setAccountMenuColor();
+    printDoubleBorderBox("DELETE ACCOUNT", COLOR_BRIGHT_WHITE, BG_GREEN, 60);
+    resetColor();
+    
     printf("Enter Account Number to delete: ");
     scanf("%d", &accNo);
     
     fp = fopen(FILENAME, "rb");
     if (fp == NULL) {
-        printf("Error opening file!\n");
+        setErrorColor();
+        printf("\nError opening file!\n");
+        resetColor();
         pause();
         return;
     }
     
     temp = fopen("data/temp.dat", "wb");
     if (temp == NULL) {
-        printf("Error creating temporary file!\n");
+        setErrorColor();
+        printf("\nError creating temporary file!\n");
+        resetColor();
         fclose(fp);
         pause();
         return;
@@ -162,10 +194,14 @@ void deleteAccount() {
     if (found) {
         remove(FILENAME);
         rename("data/temp.dat", FILENAME);
+        setSuccessColor();
         printf("\nAccount deleted successfully!\n");
+        resetColor();
     } else {
         remove("data/temp.dat");
-        printf("Account not found!\n");
+        setErrorColor();
+        printf("\nAccount not found!\n");
+        resetColor();
     }
     
     pause();
@@ -176,17 +212,24 @@ void viewAccounts() {
     FILE *fp;
     int count = 0;
     
-    printHeader("VIEW ALL ACCOUNTS");
+    clearScreen();
+    setAccountMenuColor();
+    printDoubleBorderBox("VIEW ALL ACCOUNTS", COLOR_BRIGHT_WHITE, BG_GREEN, 70);
+    resetColor();
     
     fp = fopen(FILENAME, "rb");
     if (fp == NULL) {
+        setInfoColor();
         printf("No accounts found. File is empty or doesn't exist.\n");
+        resetColor();
         pause();
         return;
     }
     
+    setColor(COLOR_BRIGHT_YELLOW, COLOR_BLACK << 4);
     printf("%-15s %-20s %-40s %-15s\n", "Account No", "Name", "Address", "Balance");
-    printf("--------------------------------------------------------------------------------\n");
+    resetColor();
+    drawHorizontalLine('-', 90);
     
     while (fread(&acc, sizeof(Account), 1, fp) == 1) {
         printf("%-15d %-20s %-40s %-15d\n", acc.a_no, acc.a_name, acc.a_addr, acc.a_bal);
@@ -196,9 +239,13 @@ void viewAccounts() {
     fclose(fp);
     
     if (count == 0) {
+        setInfoColor();
         printf("No records found.\n");
+        resetColor();
     } else {
+        setInfoColor();
         printf("\nTotal records: %d\n", count);
+        resetColor();
     }
     
     pause();

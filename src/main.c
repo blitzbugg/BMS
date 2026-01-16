@@ -7,15 +7,25 @@
 
 void accountMenu() {
     int choice;
+    const char *options[] = {
+        "Insert Record",
+        "Edit Record",
+        "Delete Record",
+        "View Records",
+        "Back to Main Menu"
+    };
+    
     do {
-        printHeader("ACCOUNT MASTER FILE");
-        printf("1. Insert Record\n");
-        printf("2. Edit Record\n");
-        printf("3. Delete Record\n");
-        printf("4. View Records\n");
-        printf("5. Back to Main Menu\n");
-        printf("\nEnter your choice: ");
+        printWelcomeBanner(); // Show welcome banner
+        setAccountMenuColor();
+        printProfessionalMenu("ACCOUNT MASTER FILE", options, 5, COLOR_BRIGHT_WHITE, BG_GREEN);
+        // Keep menu color active for prompt
+        
+        printf("\n");
+        printCenteredPrompt("Enter your choice: ");
+        resetColor(); // Reset after prompt
         scanf("%d", &choice);
+        clearInputBuffer();
         
         switch(choice) {
             case 1:
@@ -33,7 +43,11 @@ void accountMenu() {
             case 5:
                 return;
             default:
-                printf("\nInvalid choice! Please try again.\n");
+                clearScreen();
+                setErrorColor();
+                printf("\n\n");
+                printCenteredText("Invalid choice! Please try again.", 80);
+                resetColor();
                 pause();
         }
     } while(choice != 5);
@@ -41,15 +55,25 @@ void accountMenu() {
 
 void transactionMenu() {
     int choice;
+    const char *options[] = {
+        "Insert Record",
+        "Edit Record",
+        "Delete Record",
+        "View Records",
+        "Back to Main Menu"
+    };
+    
     do {
-        printHeader("TRANSACTION FILE");
-        printf("1. Insert Record\n");
-        printf("2. Edit Record\n");
-        printf("3. Delete Record\n");
-        printf("4. View Records\n");
-        printf("5. Back to Main Menu\n");
-        printf("\nEnter your choice: ");
+        printWelcomeBanner(); // Show welcome banner
+        setTransactionMenuColor();
+        printProfessionalMenu("TRANSACTION FILE", options, 5, COLOR_BRIGHT_WHITE, BG_CYAN);
+        // Keep menu color active for prompt
+        
+        printf("\n");
+        printCenteredPrompt("Enter your choice: ");
+        resetColor(); // Reset after prompt
         scanf("%d", &choice);
+        clearInputBuffer();
         
         switch(choice) {
             case 1:
@@ -67,7 +91,11 @@ void transactionMenu() {
             case 5:
                 return;
             default:
-                printf("\nInvalid choice! Please try again.\n");
+                clearScreen();
+                setErrorColor();
+                printf("\n\n");
+                printCenteredText("Invalid choice! Please try again.", 80);
+                resetColor();
                 pause();
         }
     } while(choice != 5);
@@ -75,15 +103,25 @@ void transactionMenu() {
 
 void loanMenu() {
     int choice;
+    const char *options[] = {
+        "Insert Record",
+        "Edit Record",
+        "Delete Record",
+        "View Records",
+        "Back to Main Menu"
+    };
+    
     do {
-        printHeader("LOAN FILE");
-        printf("1. Insert Record\n");
-        printf("2. Edit Record\n");
-        printf("3. Delete Record\n");
-        printf("4. View Records\n");
-        printf("5. Back to Main Menu\n");
-        printf("\nEnter your choice: ");
+        printWelcomeBanner(); // Show welcome banner
+        setLoanMenuColor();
+        printProfessionalMenu("LOAN FILE", options, 5, COLOR_BRIGHT_WHITE, BG_MAGENTA);
+        // Keep menu color active for prompt
+        
+        printf("\n");
+        printCenteredPrompt("Enter your choice: ");
+        resetColor(); // Reset after prompt
         scanf("%d", &choice);
+        clearInputBuffer();
         
         switch(choice) {
             case 1:
@@ -101,44 +139,69 @@ void loanMenu() {
             case 5:
                 return;
             default:
-                printf("\nInvalid choice! Please try again.\n");
+                clearScreen();
+                setErrorColor();
+                printf("\n\n");
+                printCenteredText("Invalid choice! Please try again.", 80);
+                resetColor();
                 pause();
         }
     } while(choice != 5);
 }
 
+void printWelcomeScreen() {
+    printWelcomeBanner();
+}
+
 int main() {
     int choice;
+    const char *options[] = {
+        "Account Master File",
+        "Transaction File",
+        "Loan File",
+        "Exit"
+    };
     
-    printf("\n");
-    printf("========================================\n");
-    printf("   BANK MANAGEMENT SYSTEM\n");
-    printf("========================================\n");
+    printWelcomeScreen();
     
     do {
-        printHeader("MAIN MENU");
-        printf("1. Account Master File\n");
-        printf("2. Transaction File\n");
-        printf("3. Loan File\n");
-        printf("4. Exit\n");
-        printf("\nEnter your choice: ");
+        setMainMenuColor();
+        printProfessionalMenu("MAIN MENU", options, 4, COLOR_BRIGHT_WHITE, BG_BLUE);
+        // Keep menu color active for prompt
+        
+        printf("\n");
+        printCenteredPrompt("Enter your choice: ");
+        resetColor(); // Reset after prompt
         scanf("%d", &choice);
+        clearInputBuffer();
         
         switch(choice) {
             case 1:
                 accountMenu();
+                printWelcomeScreen(); // Show welcome banner again when returning
                 break;
             case 2:
                 transactionMenu();
+                printWelcomeScreen();
                 break;
             case 3:
                 loanMenu();
+                printWelcomeScreen();
                 break;
             case 4:
-                printf("\nThank you for using Bank Management System!\n");
+                clearScreen();
+                printf("\n\n\n");
+                setSuccessColor();
+                printCenteredText("Thank you for using Bank Management System!", 80);
+                printf("\n\n");
+                resetColor();
                 exit(0);
             default:
-                printf("\nInvalid choice! Please try again.\n");
+                clearScreen();
+                setErrorColor();
+                printf("\n\n");
+                printCenteredText("Invalid choice! Please try again.", 80);
+                resetColor();
                 pause();
         }
     } while(choice != 4);
