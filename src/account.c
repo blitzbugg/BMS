@@ -52,7 +52,7 @@ void insertAccount() {
     resetColor();
     
     printf("\nEnter Account Name: ");
-    clearInputBuffer();
+    // clearInputBuffer();
     fgets(acc.a_name, sizeof(acc.a_name), stdin);
     removeNewline(acc.a_name);
     

@@ -4,7 +4,7 @@
 typedef struct {
     int l_id;
     int a_no;
-    char l_date[10];
+    char l_date[15];
     char l_type[20];
     int l_amt;
     int l_dur;

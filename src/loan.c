@@ -54,7 +54,7 @@ void insertLoan() {
     
     printf("Enter Account Number: ");
     scanf("%d", &accNo);
-    clearInputBuffer(); // Clear buffer after scanf
+    // clearInputBuffer(); // Clear buffer after scanf
     
     // Cross-validation: Check if account exists
     if (!accountExists(accNo)) {
@@ -79,9 +79,10 @@ void insertLoan() {
     removeNewline(loan.l_date);
     
     // Read loan type with validation
+    // clearInputBuffer();
     do {
         printf("Enter Loan Type: ");
-        fflush(stdout);
+        scanf("%d", &loan.l_type);
         if (fgets(loan.l_type, sizeof(loan.l_type), stdin) == NULL) {
             printf("Error reading input!\n");
             pause();
@@ -264,6 +265,8 @@ void deleteLoan() {
         if (loan.l_id != loanId) {
             fwrite(&loan, sizeof(Loan), 1, temp);
         } else {
+
+             
             found = 1;
         }
     }
